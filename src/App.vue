@@ -1,11 +1,12 @@
 <template>
-  <div class="app">
+  <div class="app ">
     <img
       src="@/assets/bg.jpg"
       alt="background image"
       class="absolute h-screen w-screen object-cover z-negative"
     />
-    <div class="w-screen flex justify-around flex-wrap content-start pt-4">
+    <div class="lg:flex lg:justify-center lg:flex-col lg:items-center">
+      <div class="w-screen flex justify-around flex-wrap content-start pt-4 md:px-24 lg:max-w-screen-lg ">
       <Card
         v-for="villager in villagers"
         :key="villager.id"
@@ -15,6 +16,7 @@
           firstPick === villager || secondPick === villager || villager.matched
         "
       />
+    </div>
     </div>
     <div
       class="w-full flex justify-center items-center z-0 text-2xl text-gray font-bold "
