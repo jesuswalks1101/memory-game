@@ -1,17 +1,38 @@
 <template>
-  <div id="app">
-    <div class="container flex justify-center flex-wrap">
-      <Card v-for="villager in shuffle" :key="villager.index" :card="villager" />
+  <div class="app">
+    <img
+      src="@/assets/bg.jpg"
+      alt="background image"
+      class="absolute h-screen w-screen object-cover z-negative"
+    />
+    <div class="w-screen flex justify-around flex-wrap content-start pt-4">
+      <Card
+        v-for="villager in villagers"
+        :key="villager.id"
+        :card="villager"
+        @click="handleClick"
+        :active="
+          firstPick === villager || secondPick === villager || villager.matched
+        "
+      />
     </div>
+    <div
+      class="w-full flex justify-center items-center z-0 text-2xl text-gray font-bold "
+    >
+      Turns: {{ turns }}
+    </div>
+   <Modal v-show="done" :turns="turns" @click="resetGame" />
   </div>
 </template>
 
 <script>
 import Card from "./components/Card.vue";
+import Modal from "./components/Modal.vue";
 export default {
   name: "App",
   components: {
     Card,
+    Modal
   },
   data() {
     return {
@@ -24,18 +45,62 @@ export default {
         { img: "sherb.png" },
       ],
       villagers: [],
+      firstPick: null,
+      secondPick: null,
+      turns: 0,
+      done: false
     };
   },
-  mounted() {
-    this.villagers = [...this.images, ...this.images].map((villager, index) => ({
-        ...villager, matched: false, id: index
-      }));
-    console.log(this.villagers);
-  },
-  computed: {
-    shuffle() {
-      return this.villagers.sort(() => Math.random() - 0.5);
+  methods: {
+    handleClick(card) {
+      this.firstPick ? (this.secondPick = card) : (this.firstPick = card);
+      if (this.firstPick && this.secondPick) {
+        if (this.firstPick.img === this.secondPick.img) {
+          const ind1 = this.villagers.indexOf(card);
+          const ind2 = this.villagers.indexOf(this.firstPick);
+          this.villagers[ind1].matched = true;
+          this.villagers[ind2].matched = true;
+          console.log("match!");
+          this.resetActive();
+        } else {
+          console.log("not match!");
+          this.resetActive();
+        }
+        this.turns++;
+      }
+      this.checkIfCompleted();
     },
+    resetActive() {
+      setTimeout(() => {
+        this.firstPick = null;
+        this.secondPick = null;
+      }, 500);
+    },
+    shuffle() {
+      this.villagers.sort(() => Math.random() - 0.5);
+    },
+    checkIfCompleted(){
+      if(this.villagers.every(villager => villager.matched)) this.done = true;
+    },
+    resetGame(){
+      this.firstPick = null;
+      this.secondPick = null;
+      this.turns = 0;
+      this.done = false;
+      this.villagers.forEach(v => v.matched = false);
+      setTimeout(() => {
+        this.shuffle();
+      }, 500);
+    }
+  },
+  mounted() {
+    this.villagers = [...this.images, ...this.images].map(
+      (villager, index) => ({
+        ...villager,
+        matched: false,
+        id: index,
+      })
+    );
   },
 };
 </script>

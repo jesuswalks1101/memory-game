@@ -1,43 +1,35 @@
 <template>
   <div
-    class="
-      card
-      w-40
-      h-56
-      m-2
-      flex
-      justify-center
-      items-center
-      relative
-      cursor-pointer
-      hover:shadow-lg
-    "
+    class="card xs:h-24 xs:w-20 xs:justify-center xs:m-2 sm:h-26"
     :class="{'flipped' : active}"
-    @click="active = !active"
+    @click="clickHandler"
   >
+  <div class="imgcon h-full w-full custom-green front shadow-lg flex items-center justify-center">
     <img
       :src="require(`../assets/${card.img}`)"
       alt="ac"
-      class="h-full p-4 w-full front shadow-lg"
-      
+      class="h-full w-full object-full xs:h-4/5 xs:w-4/5"
     />
+  </div>
     <img
       src="../assets/back.png"
       alt="back"
-      class="h-full w-full back shadow-sm"
+      class="h-full w-full back"
     />
   </div>
 </template>
 
 <script>
 export default {
-  name: "card",
-  props: ["card"],
-  data() {
-    return {
-      active: false,
-    };
-  },
+  name: 'card',
+  props: ['card','active'],
+  methods : {
+    clickHandler(){
+      if(!this.active){
+        this.$emit('click', this.card);
+      }
+    }
+  }
 };
 </script>
 
