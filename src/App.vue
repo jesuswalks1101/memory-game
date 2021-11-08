@@ -60,10 +60,8 @@ export default {
           const ind2 = this.villagers.indexOf(this.firstPick);
           this.villagers[ind1].matched = true;
           this.villagers[ind2].matched = true;
-          console.log("match!");
           this.resetActive();
         } else {
-          console.log("not match!");
           this.resetActive();
         }
         this.turns++;
